@@ -61,10 +61,13 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements){
+const displayMovements = function (movements, sort = false){
   containerMovements.innerHTML = '';
 
-  movements.forEach(function(mov, i){
+  //Sorting
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements
+
+  movs.forEach(function(mov, i){
     const type =  mov > 0? 'deposit' : 'withdrawal'
 
     const html = `
@@ -175,6 +178,25 @@ btnTransfer.addEventListener('click', function(e){
     }
 })
 
+//Loan button
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  //NOTE:customer can only collect a loan if they have any deposit greater than 10% of the requested loan amount
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1 )){
+    //Add movements
+    currentAccount.movements.push(amount);
+
+    //Update UI
+    updateUI(currentAccount)
+  }
+  inputLoanAmount.value = ''
+})
+
+
+
 
 //Close account
 btnClose.addEventListener('click', function(e){
@@ -196,6 +218,14 @@ btnClose.addEventListener('click', function(e){
     }
     inputCloseUsername.value = '';
     inputClosePin.value = '';
+});
+
+let sorted = false;
+btnSort.addEventListener('click', function(e){
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted)
+  sorted = !sorted
+
 })
 
 /////////////////////////////////////////////////
@@ -211,3 +241,17 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////
+
+
+const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
+console.log(owners.sort());
+console.log(movements);
+console.log(movements.sort());
+
+console.log(movements.sort((a, b) => {
+  if(a > b){
+    return 1
+  } if (b > a){
+    return -1
+  }
+}));
