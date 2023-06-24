@@ -78,7 +78,6 @@ const displayMovements = function (movements){
 
   });
 };
-displayMovements(account1.movements)
 
 const calcDisplayBalance = function(movements){
   const balance = movements.reduce((acc, mov) => acc + mov, 0)
@@ -103,20 +102,49 @@ const calcDisplaySummary = function(movements){
   .filter(int => int >= 1)
   .reduce((acc, int) => acc + int, 0); 
   labelSumInterest.textContent = `${interest} EUR`
-}
-calcDisplaySummary(account1.movements);
+};
 
 const createUsernames = function(accs){              
   accs.forEach(function(acc){
-    acc.username = acc.owner.toLowerCase().split(' ').map(name => name[0]).join('');
+    acc.username = acc.owner
+    .toLowerCase()
+    .split(' ')
+    .map(name => name[0])
+    .join('');
   });
 };
-createUsernames(accounts);
+createUsernames(accounts)
 
+//Event handlers
+let currentAccount;
 
+btnLogin.addEventListener('click', function(e){
+  //prevent form form submitting
+  e.preventDefault();
+  currentAccount =  accounts.find(acc => acc.username === inputLoginUsername.value);
+  console.log(currentAccount);
 
+  if(currentAccount?.pin === Number(inputLoginPin.value)){
+    //Display UI and a welcome message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
+    containerApp.style.opacity = '100'
 
+    //CLear inout fields
+    inputLoginUsername.value = '';
+    inputLoginPin.value = '';
+    inputLoginPin.blur();
 
+    //Display Movements
+    displayMovements(currentAccount.movements)
+
+    //Display Balance
+    calcDisplayBalance(currentAccount.movements);
+
+    //Display Summary
+    calcDisplaySummary(currentAccount.movements);
+
+  }
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
