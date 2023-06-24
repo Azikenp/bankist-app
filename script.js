@@ -86,8 +86,7 @@ const createUsernames = function(accs){
   })
   
 }
-console.log(accounts)
-console.log(createUsernames(accounts))
+createUsernames(accounts)
 
 
 /////////////////////////////////////////////////
