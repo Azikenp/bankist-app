@@ -102,6 +102,30 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+
+
+//////////////////////////////////////////////////////////////////////////////// functions
+
+const formatDateMovements = function(date){
+  const calcDaysPassed = (date1, date2) => Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24)); 
+
+  const daysPassed = calcDaysPassed(new Date(), date)
+  console.log(daysPassed);
+
+  if (daysPassed === 0 ) return 'Today';
+  if (daysPassed === 1 ) return 'Yesterday';
+  if (daysPassed <= 7 ) return `${daysPassed} days ago`;
+  else{
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  
+}
+
+
 const displayMovements = function (acc, sort = false){
   containerMovements.innerHTML = '';
 
@@ -112,10 +136,8 @@ const displayMovements = function (acc, sort = false){
     const type =  mov > 0? 'deposit' : 'withdrawal'
 
     const date = new Date(acc.movementsDates[i]);
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
-    const displayDate = `${day}/${month}/${year}`;
+    const displayDate = formatDateMovements(date);
+
 
     const html = `
     <div class="movements__row">
