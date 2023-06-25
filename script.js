@@ -296,14 +296,17 @@ btnLoan.addEventListener('click', function(e){
 
   //NOTE:customer can only collect a loan if they have any deposit greater than 10% of the requested loan amount
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1 )){
-    //Add movements
+    
+    setTimeout(function(){
+      //Add movements
     currentAccount.movements.push(amount);
 
     //Add loan date
     currentAccount.movementsDates.push(new Date().toISOString());
 
     //Update UI
-    updateUI(currentAccount)
+    updateUI(currentAccount);
+    }, 2500)
   }
   inputLoanAmount.value = ''
 })
